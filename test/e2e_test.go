@@ -13,10 +13,6 @@ import (
 	echoserverpb "github.com/110y/echoserver/echoserver/api/v1"
 )
 
-type upstreamResponse struct {
-	Message string `json:"message"`
-}
-
 func TestE2E(t *testing.T) {
 	t.Parallel()
 
