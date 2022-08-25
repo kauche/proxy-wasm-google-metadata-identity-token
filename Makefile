@@ -35,7 +35,7 @@ test-docker:
 		golang:1.19.0-bullseye make test
 
 .PHONY: build
-build:
+build: $(TINYGO)
 	@$(TINYGO) build -o $(BIN_DIR)/proxy-wasm-google-metadata-identity-token.wasm -scheduler=none -target=wasi .
 
 .PHONY: build-docker
