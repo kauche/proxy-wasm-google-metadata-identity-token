@@ -7,7 +7,7 @@ services:
     ports:
       - ${PORT-8080}:8080
     volumes:
-      - ./example/envoy.yaml:/etc/envoy/envoy.yaml
+      - ./test/envoy.yaml:/etc/envoy/envoy.yaml
       - ./.bin/proxy-wasm-google-metadata-identity-token.wasm:/etc/envoy/proxy-wasm-google-metadata-identity-token.wasm
     command: /docker-entrypoint.sh envoy -c /etc/envoy/envoy.yaml --log-format '%L%m%d %T.%e %t envoy/%@] [%t][%n]%v' --log-format-escaped
 
