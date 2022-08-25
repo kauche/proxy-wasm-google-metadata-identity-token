@@ -66,6 +66,10 @@ func getPluginConfiguration() (*pluginConfiguration, error) {
 	}
 
 	tokenCacheDuration := jsonConfig.Get(configKeyTokenCacheDuration).Uint()
+	if tokenCacheDuration == 0 {
+		tokenCacheDuration = defaultTokenCacheDuration
+	}
+
 	propagationHeader := jsonConfig.Get(configKeyOriginalAuthorizationPropagationHeader).String()
 
 	return &pluginConfiguration{

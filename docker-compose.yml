@@ -1,0 +1,23 @@
+---
+version: "3.8"
+
+services:
+  envoy:
+    image: envoyproxy/envoy:v1.23.0
+    ports:
+      - ${PORT-8080}:8080
+    volumes:
+      - ./example/envoy.yaml:/etc/envoy/envoy.yaml
+      - ./.bin/proxy-wasm-google-metadata-identity-token.wasm:/etc/envoy/proxy-wasm-google-metadata-identity-token.wasm
+    command: /docker-entrypoint.sh envoy -c /etc/envoy/envoy.yaml --log-format '%L%m%d %T.%e %t envoy/%@] [%t][%n]%v' --log-format-escaped
+
+  upstream:
+    image: ghcr.io/110y/echoserver/echoserver:0.0.3
+
+  metadataserver:
+    image: golang:1.19.0-bullseye
+    volumes:
+      - .:/go/src/github.com/kauche/proxy-wasm-google-metadata-identity-token:cached
+      - $GOPATH/pkg/mod:/go/pkg/mod:cached
+    working_dir: /go/src/github.com/kauche/proxy-wasm-google-metadata-identity-token/metadataserver
+    command: go run .
