@@ -1,0 +1,11 @@
+github.com/110y/run v1.0.1 h1:xBqi3HHgQFrJb3hTqX+ushfykRxVtnra3a/qSMMUN9g=
+github.com/110y/run v1.0.1/go.mod h1:VTB7Uo0YFG10AXqXnklrmxUhezPLzJFaGSjijl5CnsM=
+github.com/110y/servergroup v0.0.0-20220503060600-9c5533f51f4a h1:y7Key+wTozdBHq17CTPn9fgyOEKNeydhreJmjz95se0=
+github.com/110y/servergroup v0.0.0-20220503060600-9c5533f51f4a/go.mod h1:WiKRdtL8n9R6BHZrvIVj7WAy9x/ApOIi/nqj//D9ttY=
+github.com/google/go-cmp v0.5.8 h1:e6P7q2lk1O+qJJb4BtCQXlK8vWEO8V1ZeuEdJNOqZyg=
+github.com/hashicorp/errwrap v1.0.0 h1:hLrqtEDnRye3+sgx6z4qVLNuviH3MR5aQ0ykNJa/UYA=
+github.com/hashicorp/errwrap v1.0.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brvKWEqk/Jc4=
+github.com/hashicorp/go-multierror v1.1.1 h1:H5DkEtf6CXdFp0N0Em5UCwQpXMWke8IA0+lD48awMYo=
+github.com/hashicorp/go-multierror v1.1.1/go.mod h1:iw975J/qwKPdAO1clOe2L8331t/9/fmwbPZ6JB6eMoM=
+golang.org/x/sys v0.0.0-20220818161305-2296e01440c6 h1:Sx/u41w+OwrInGdEckYmEuU5gHoGSL4QbDz3S9s6j4U=
+golang.org/x/sys v0.0.0-20220818161305-2296e01440c6/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
