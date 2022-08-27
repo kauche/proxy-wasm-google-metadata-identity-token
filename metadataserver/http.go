@@ -23,7 +23,6 @@ func (h *httpServer) Start(ctx context.Context) error {
 
 	h.server = &http.Server{
 		Handler: mux,
-		Addr:    "0.0.0.0:8080",
 	}
 
 	if err := h.server.Serve(lis); err != nil && err != http.ErrServerClosed {
