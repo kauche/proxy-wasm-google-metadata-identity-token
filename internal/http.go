@@ -97,9 +97,35 @@ func (c *httpContext) propagateOriginalAuthorizationHeader() error {
 }
 
 func httpCallResponseCallback(_, bodySize, _ int) {
+	headers, err := proxywasm.GetHttpCallResponseHeaders()
+	if err != nil {
+		setErrorHTTPResponseWithLog("failed to get the http response headers from the metadata server: %s", err)
+		return
+	}
+
+	var status string
+	for _, header := range headers {
+		if header[0] == ":status" {
+			status = header[1]
+			break
+		}
+	}
+
+	if status == "" {
+		setErrorHTTPResponseWithLog("failed to get the http response status from the metadata server: %s", err)
+		return
+	}
+
 	res, err := proxywasm.GetHttpCallResponseBody(0, bodySize)
 	if err != nil {
 		setErrorHTTPResponseWithLog("failed to get the http response from the metadata server: %s", err)
+		return
+	}
+
+	body := string(res)
+
+	if status != "200" {
+		setErrorHTTPResponseWithLog("failed to call the metadata server, status:%s, body:%s", status, body)
 		return
 	}
 
@@ -115,7 +141,7 @@ func httpCallResponseCallback(_, bodySize, _ int) {
 		return
 	}
 
-	if err := proxywasm.ReplaceHttpRequestHeader("authorization", fmt.Sprintf("Bearer %s", string(res))); err != nil {
+	if err := proxywasm.ReplaceHttpRequestHeader("authorization", fmt.Sprintf("Bearer %s", body)); err != nil {
 		setErrorHTTPResponseWithLog("failed to set the identity token to the authorization header: %s", err)
 		return
 	}

@@ -248,12 +248,35 @@ func TestE2E(t *testing.T) {
 			return
 		}
 	})
+
+	t.Run("with an invalid metadataserver cluster", func(t *testing.T) {
+		t.Parallel()
+		host := "upstream-3"
+
+		req, err := createHTTPRequest(host)
+		if err != nil {
+			t.Errorf("failed to create a http request: %s", err)
+			return
+		}
+
+		res, err := http.DefaultClient.Do(req)
+		if err != nil {
+			t.Errorf("failed to send first http request: %s", err)
+			return
+		}
+		defer res.Body.Close()
+
+		if res.StatusCode != 500 {
+			t.Errorf("expected an internal server error, but got statusl:%d", res.StatusCode)
+			return
+		}
+	})
 }
 
 func createHTTPRequest(host string) (*http.Request, error) {
 	addr := os.Getenv("ENVOY_ADDRESS")
 	if addr == "" {
-		addr = "localhost:8080"
+		addr = "localhost:9090"
 	}
 
 	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("http://%s/", addr), bytes.NewBuffer([]byte(`{"message":"hello"}`)))
