@@ -121,6 +121,50 @@ static_resources:
                                                   "audience": "upstream-2",
                                                   "metadata_server_cluster": "metadataserver"
                                                 }
+                            - predicate:
+                                and_matcher:
+                                  predicate:
+                                    - single_predicate:
+                                        input:
+                                          name: host
+                                          typed_config:
+                                            "@type": type.googleapis.com/envoy.type.matcher.v3.HttpRequestHeaderMatchInput
+                                            header_name: "host"
+                                        value_match:
+                                          exact: "upstream-3"
+                                    - single_predicate:
+                                        input:
+                                          name: path-prefix
+                                          typed_config:
+                                            "@type": type.googleapis.com/envoy.type.matcher.v3.HttpRequestHeaderMatchInput
+                                            header_name: ":path"
+                                        value_match:
+                                          prefix: "/"
+                              on_match:
+                                action:
+                                  name: composite-action
+                                  typed_config:
+                                    "@type": type.googleapis.com/envoy.extensions.filters.http.composite.v3.ExecuteFilterAction
+                                    typed_config:
+                                      name: wasm
+                                      typed_config:
+                                        "@type": type.googleapis.com/udpa.type.v1.TypedStruct
+                                        type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
+                                        value:
+                                          config:
+                                            vm_config:
+                                              runtime: envoy.wasm.runtime.v8
+                                              vm_id: proxy-wasm-google-metadata-identity-token-for-upstream-3
+                                              code:
+                                                local:
+                                                  filename: /etc/envoy/proxy-wasm-google-metadata-identity-token.wasm
+                                            configuration:
+                                              "@type": type.googleapis.com/google.protobuf.StringValue
+                                              value: |
+                                                {
+                                                  "audience": "upstream-3",
+                                                  "metadata_server_cluster": "invalid-metadataserver"
+                                                }
                   - name: envoy.filters.http.router
                     typed_config:
                       '@type': type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -165,6 +209,20 @@ static_resources:
                   address:
                     socket_address:
                       address: metadataserver
+                      port_value: 8080
+
+    - name: invalid-metadataserver
+      connect_timeout: 5000s
+      type: STRICT_DNS
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: metadataserver
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: invalid-metadataserver
                       port_value: 8080
 
 admin:
