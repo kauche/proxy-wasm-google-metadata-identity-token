@@ -8,7 +8,7 @@ This [proxy-wasm](https://github.com/proxy-wasm/spec) compliant WebAssembly modu
 
 For example, we can make proxies achieve the [Service-to-Service authentication for Google Cloud Run](https://cloud.google.com/run/docs/authenticating/service-to-service) with this WebAssembly module.
 
-This WebAssembly module works similarly to [Envoy native GCP Authentication Filter](https://www.envoyproxy.io/docs/envoy/v1.23.1/configuration/http/http_filters/gcp_authn_filter), but has more control capabilities like propagating original `Authorization` to upstreams.
+This WebAssembly module works similarly to [Envoy native GCP Authentication Filter](https://www.envoyproxy.io/docs/envoy/v1.24.1/configuration/http/http_filters/gcp_authn_filter), but has more control capabilities like propagating original `Authorization` to upstreams.
 
 ## Usage
 
@@ -66,7 +66,7 @@ clusters:
                     port_value: 80
 ```
 
-We can also configure this WebAssembly module for the per Route basis by using the [Composite Filter](https://www.envoyproxy.io/docs/envoy/v1.23.1/configuration/http/http_filters/composite_filter). See the [example `envoy.yaml`](https://github.com/kauche/proxy-wasm-google-metadata-identity-token/blob/main/test/envoy.yaml) for more details.
+We can also configure this WebAssembly module for the per Route basis by using the [Composite Filter](https://www.envoyproxy.io/docs/envoy/v1.24.1/configuration/http/http_filters/composite_filter). See the [example `envoy.yaml`](https://github.com/kauche/proxy-wasm-google-metadata-identity-token/blob/main/test/envoy.yaml) for more details.
 
 ### Plugin Configurations
 
