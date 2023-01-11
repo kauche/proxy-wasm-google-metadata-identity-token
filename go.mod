@@ -3,8 +3,8 @@ module github.com/kauche/proxy-wasm-google-metadata-identity-token
 go 1.18
 
 require (
-	github.com/tetratelabs/proxy-wasm-go-sdk v0.19.0
-	github.com/tidwall/gjson v1.14.3
+	github.com/tetratelabs/proxy-wasm-go-sdk v0.20.0
+	github.com/tidwall/gjson v1.14.4
 )
 
 require (
