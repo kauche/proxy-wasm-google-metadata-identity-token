@@ -22,9 +22,9 @@ test-docker:
 	docker compose stop
 	docker compose up --detach
 
-	docker run --rm --network $(DOCKER_NETWORK) jwilder/dockerize:0.6.1 -wait tcp://envoy:8080 -timeout 10s
-	docker run --rm --network $(DOCKER_NETWORK) jwilder/dockerize:0.6.1 -wait tcp://metadataserver:8080 -timeout 10s
-	docker run --rm --network $(DOCKER_NETWORK) jwilder/dockerize:0.6.1 -wait tcp://upstream:5000 -timeout 10s
+	docker run --rm --network $(DOCKER_NETWORK) jwilder/dockerize:0.6.1 -wait tcp://envoy:8080 -timeout 30s
+	docker run --rm --network $(DOCKER_NETWORK) jwilder/dockerize:0.6.1 -wait tcp://metadataserver:8080 -timeout 30s
+	docker run --rm --network $(DOCKER_NETWORK) jwilder/dockerize:0.6.1 -wait tcp://upstream:5000 -timeout 30s
 
 	docker run \
 		--rm \
