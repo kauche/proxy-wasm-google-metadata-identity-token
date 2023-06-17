@@ -1,12 +1,12 @@
 package internal
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 
 	"github.com/tetratelabs/proxy-wasm-go-sdk/proxywasm"
 	"github.com/tetratelabs/proxy-wasm-go-sdk/proxywasm/types"
-	"github.com/tidwall/gjson"
 )
 
 var _ types.PluginContext = (*pluginContext)(nil)
@@ -49,33 +49,22 @@ func getPluginConfiguration() (*pluginConfiguration, error) {
 		return nil, errors.New("the plugin configuration is empty")
 	}
 
-	if !gjson.ValidBytes(config) {
-		return nil, errors.New("the plugin configuration is not valid JSON")
+	pc := new(pluginConfiguration)
+	if err := json.Unmarshal(config, pc); err != nil {
+		return nil, fmt.Errorf("failed to marshal given plugin configuration: %w", err)
 	}
 
-	jsonConfig := gjson.ParseBytes(config)
-
-	audience := jsonConfig.Get(configKeyAudience).String()
-	if audience == "" {
+	if pc.Audience == "" {
 		return nil, fmt.Errorf("the plugin configuration does not include `%s`", configKeyAudience)
 	}
 
-	cluster := jsonConfig.Get(configKeyMetadataServerCluster).String()
-	if cluster == "" {
+	if pc.MetadataServerCluster == "" {
 		return nil, fmt.Errorf("the plugin configuration does not include `%s`", configKeyMetadataServerCluster)
 	}
 
-	tokenCacheDuration := jsonConfig.Get(configKeyTokenCacheDuration).Uint()
-	if tokenCacheDuration == 0 {
-		tokenCacheDuration = defaultTokenCacheDuration
+	if pc.TokenCacheDuration == 0 {
+		pc.TokenCacheDuration = defaultTokenCacheDuration
 	}
 
-	propagationHeader := jsonConfig.Get(configKeyOriginalAuthorizationPropagationHeader).String()
-
-	return &pluginConfiguration{
-		audience:                               audience,
-		metadataServerCluster:                  cluster,
-		tokenCacheDuration:                     tokenCacheDuration,
-		originalAuthorizationPropagationHeader: propagationHeader,
-	}, nil
+	return pc, nil
 }

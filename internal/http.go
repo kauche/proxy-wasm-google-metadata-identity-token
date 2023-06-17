@@ -23,7 +23,7 @@ type httpContext struct {
 }
 
 func (c *httpContext) OnHttpRequestHeaders(_ int, _ bool) types.Action {
-	if c.configuration.originalAuthorizationPropagationHeader != "" {
+	if c.configuration.OriginalAuthorizationPropagationHeader != "" {
 		if err := c.propagateOriginalAuthorizationHeader(); err != nil {
 			setErrorHTTPResponseWithLog("failed to propagate the original authorization header: %s", err)
 			return types.ActionPause
@@ -47,7 +47,7 @@ func (c *httpContext) OnHttpRequestHeaders(_ int, _ bool) types.Action {
 		iat := binary.LittleEndian.Uint64(iatBytes)
 		now := uint64(time.Now().Unix())
 
-		if now-iat < c.configuration.tokenCacheDuration {
+		if now-iat < c.configuration.TokenCacheDuration {
 			if err := proxywasm.ReplaceHttpRequestHeader("authorization", fmt.Sprintf("Bearer %s", string(tokenBytes))); err != nil {
 				setErrorHTTPResponseWithLog("failed to set the chached identity token to the authorization header: %s", err)
 				return types.ActionPause
@@ -58,9 +58,9 @@ func (c *httpContext) OnHttpRequestHeaders(_ int, _ bool) types.Action {
 	}
 
 	_, err := proxywasm.DispatchHttpCall(
-		c.configuration.metadataServerCluster,
+		c.configuration.MetadataServerCluster,
 		[][2]string{
-			{":path", fmt.Sprintf("/computeMetadata/v1/instance/service-accounts/default/identity?audience=%s", c.configuration.audience)},
+			{":path", fmt.Sprintf("/computeMetadata/v1/instance/service-accounts/default/identity?audience=%s", c.configuration.Audience)},
 			{":method", "GET"},
 			{":authority", "metadata.google.internal"},
 			{":scheme", "http"},
@@ -89,8 +89,8 @@ func (c *httpContext) propagateOriginalAuthorizationHeader() error {
 		return fmt.Errorf("failed to get the original authorization header: %w", err)
 	}
 
-	if err := proxywasm.ReplaceHttpRequestHeader(c.configuration.originalAuthorizationPropagationHeader, authorization); err != nil {
-		return fmt.Errorf("failed to propagate the original authorization header as `%s`: %w", c.configuration.originalAuthorizationPropagationHeader, err)
+	if err := proxywasm.ReplaceHttpRequestHeader(c.configuration.OriginalAuthorizationPropagationHeader, authorization); err != nil {
+		return fmt.Errorf("failed to propagate the original authorization header as `%s`: %w", c.configuration.OriginalAuthorizationPropagationHeader, err)
 	}
 
 	return nil
