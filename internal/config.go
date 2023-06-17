@@ -10,8 +10,8 @@ const (
 )
 
 type pluginConfiguration struct {
-	audience                               string
-	metadataServerCluster                  string
-	tokenCacheDuration                     uint64
-	originalAuthorizationPropagationHeader string
+	Audience                               string `json:"audience"`
+	MetadataServerCluster                  string `json:"metadata_server_cluster"`
+	TokenCacheDuration                     uint64 `json:"token_cache_duration"`
+	OriginalAuthorizationPropagationHeader string `json:"original_authorization_propagation_header"`
 }
