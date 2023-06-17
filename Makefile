@@ -3,7 +3,7 @@ ARCH := $(shell case $$(uname -m) in (x86_64) echo amd64 ;; (aarch64) echo arm64
 
 BIN_DIR := ./.bin
 
-TINYGO_VERSION := 0.26.0
+TINYGO_VERSION := 0.28.1
 TINYGO := $(abspath $(BIN_DIR)/tinygo-$(TINYGO_VERSION))/bin/tinygo
 
 DOCKER_NETWORK := proxy-wasm-google-metadata-identity-token_default
@@ -22,9 +22,9 @@ test-docker:
 	docker compose stop
 	docker compose up --detach
 
-	docker run --rm --network $(DOCKER_NETWORK) jwilder/dockerize:0.6.1 -wait tcp://envoy:8080 -timeout 10s
-	docker run --rm --network $(DOCKER_NETWORK) jwilder/dockerize:0.6.1 -wait tcp://metadataserver:8080 -timeout 10s
-	docker run --rm --network $(DOCKER_NETWORK) jwilder/dockerize:0.6.1 -wait tcp://upstream:5000 -timeout 10s
+	docker run --rm --network $(DOCKER_NETWORK) jwilder/dockerize:0.6.1 -wait tcp://envoy:8080 -timeout 30s
+	docker run --rm --network $(DOCKER_NETWORK) jwilder/dockerize:0.6.1 -wait tcp://metadataserver:8080 -timeout 30s
+	docker run --rm --network $(DOCKER_NETWORK) jwilder/dockerize:0.6.1 -wait tcp://upstream:5000 -timeout 30s
 
 	docker run \
 		--rm \
@@ -32,7 +32,7 @@ test-docker:
 		--volume "$(shell pwd):/workspace" \
 		--workdir /workspace \
 		--network $(DOCKER_NETWORK) \
-		golang:1.19.4-bullseye make test
+		golang:1.20.5-bullseye make test
 
 .PHONY: build
 build: $(TINYGO)
@@ -46,5 +46,5 @@ build-docker:
 		--volume "$(shell pwd):/workspace" \
 		--user "$(shell id -u):$(shell id -g)" \
 		--workdir /workspace \
-		golang:1.18.5-bullseye \
+		golang:1.20.5-bullseye \
 		make build
