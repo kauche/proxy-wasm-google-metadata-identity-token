@@ -146,7 +146,10 @@ func httpCallResponseCallback(_, bodySize, _ int) {
 		return
 	}
 
-	proxywasm.ResumeHttpRequest()
+	if err := proxywasm.ResumeHttpRequest(); err != nil {
+		setErrorHTTPResponseWithLog("failed to resume the http request: %s", err)
+		return
+	}
 }
 
 func setErrorHTTPResponseWithLog(format string, args ...interface{}) {
