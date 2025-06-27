@@ -38,6 +38,11 @@ test-docker:
 build: $(TINYGO)
 	@$(TINYGO) build -o $(BIN_DIR)/proxy-wasm-google-metadata-identity-token.wasm -scheduler=none -target=wasi .
 
+.PHONY: build-rust
+build-rust:
+	@cargo build --target wasm32-wasip1 --release
+	@cp ./target/wasm32-wasip1/release/proxy_wasm_google_metadata_identity_token.wasm $(BIN_DIR)/proxy-wasm-google-metadata-identity-token.wasm
+
 .PHONY: build-docker
 build-docker:
 	@docker run \
@@ -48,3 +53,14 @@ build-docker:
 		--workdir /workspace \
 		golang:1.20.5-bullseye \
 		make build
+
+.PHONY: build-docker-rust
+build-docker-rust:
+	@docker build -t proxy-wasm-google-metadata-identity-token-rust-builder -f ./Dockerfile .
+	@docker run \
+		--rm \
+		--volume "$(shell pwd):/workspace" \
+		--user "$(shell id -u):$(shell id -g)" \
+		--workdir /workspace \
+		proxy-wasm-google-metadata-identity-token-rust-builder \
+		make build-rust

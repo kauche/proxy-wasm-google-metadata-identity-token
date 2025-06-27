@@ -17,7 +17,7 @@ jobs:
 
       - name: Build
         run: |
-          make build-docker
+          make build-docker-rust
 
       - name: Test
         run: |
